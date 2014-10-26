@@ -23,6 +23,9 @@ ball_vel = [0,0]
 LEFT = False
 RIGHT = True
 
+score1 = 0
+score2 = 0
+
 # initialize ball_pos and ball_vel for new bal in middle of table
 # if direction is RIGHT, the ball's velocity is right, else left
 def spawn_ball(direction):
@@ -38,6 +41,8 @@ def spawn_ball(direction):
 def new_game():
     global paddle1_pos, paddle2_pos, paddle1_vel, paddle2_vel  # these are numbers
     global score1, score2  # these are ints
+    score1 = 0
+    score2 = 0
     spawn_ball(RIGHT)
 
 def draw(canvas):
@@ -58,12 +63,14 @@ def draw(canvas):
             ball_vel[0]*=(-1.1)             
         else :                            
             spawn_ball(RIGHT)
+            score2+=1
     
     if ( ball_pos[0] >= WIDTH - BALL_RADIUS - PAD_WIDTH):
         if (ball_pos[1] >= paddle2_pos[1] -30) and (ball_pos[1] <= (paddle2_pos[1] + 30)):
             ball_vel[0]*=(-1.1)
         else :                            
             spawn_ball(LEFT)
+            score1+=1
     
     if ball_pos[1] >= HEIGHT - 1 - BALL_RADIUS:
         ball_vel[1] = -ball_vel[1]    
@@ -82,7 +89,8 @@ def draw(canvas):
     canvas.draw_line((paddle1_pos[0],paddle1_pos[1]-30), (paddle1_pos[0],paddle1_pos[1]+30), 10, 'Red')
     canvas.draw_line((paddle2_pos[0],paddle2_pos[1]-30), (paddle2_pos[0],paddle2_pos[1]+30), 10, 'Red')
     # draw scores
-        
+    canvas.draw_text(str(score1),[WIDTH/2 - 75,50],50,'red')
+    canvas.draw_text(str(score2),[WIDTH/2 + 75,50],50,'red')     
 def keydown(key):
     global paddle1_vel, paddle2_vel
     acc = 3.5
@@ -112,6 +120,7 @@ frame = simplegui.create_frame("Pong", WIDTH, HEIGHT)
 frame.set_draw_handler(draw)
 frame.set_keydown_handler(keydown)
 frame.set_keyup_handler(keyup)
+frame.add_button("New Game",new_game)
 
 
 # start frame
